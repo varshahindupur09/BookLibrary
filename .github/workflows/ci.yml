@@ -2,12 +2,19 @@ name: JavaSpringBoot CI with Gradle
 
 # Trigger workflow on push or pull_request events on the main branch
 on:
+  workflow_dispatch: # for manual trigger
+    inputs:
+      imgversion:
+        description: 'Enter the docker image version to build'
+        required: true
+        default: 0.0.1
   push:
     branches:
       - main
   pull_request:
     branches:
       - main
+
 
 jobs:
   build:
@@ -46,8 +53,11 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t booking-api .
-
+      
+      - name: Docker Login 
+        run: docker login --username ${{ secrets.DOCKER_USERNAME }} --password ${{ secrets.DOCKER_PASSWORD }}
+      
       - name: Deploy to Docker Hub
         run: |
-          echo "${{ secrets.DOCKER_USERNAME }}" | docker login --username $DOCKER_USERNAME --password-stdin
-          docker push booking-api
+          docker tag booking-api akumarraj/booking-api:${{ github.event.inputs.imgversion }}
+          docker push akumarraj/booking-api:${{ github.event.inputs.imgversion }}
