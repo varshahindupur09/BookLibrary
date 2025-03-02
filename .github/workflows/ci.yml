@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # You can change this to your desired version of JDK
-          distribution: 'adoptopenjdk'  # You can change the distribution to other JDKs like Zulu, OpenJDK, etc.
+          distribution: 'temurin'  # You can change the distribution to other JDKs like Zulu, OpenJDK, etc.
 
       # Step 3: Cache Gradle dependencies to speed up builds
       - name: Cache Gradle dependencies
