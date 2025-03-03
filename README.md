@@ -13,3 +13,9 @@ curl -X GET "http://localhost:8080/api/book/1" \
 
 docker build -t javaspringbootimage .
 docker run -p 8080:8080 javaspringbootimage
+
+
+./gradlew build
+docker run --name redis-container -d -p 6379:6379 redis
+bookservice
+./gradlew bootRun

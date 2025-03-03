@@ -3,12 +3,13 @@ package com.poc.bookingapi.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "book_t")
 @Data
-public class Book {
+public class Book implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long bookId;

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+
 import java.util.Optional;
 import java.util.List;
 
@@ -18,6 +21,7 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Cacheable(value = "books")
     public List<Book> getAllBooks() {
         List<Book> books = bookRepository.findAll();
         if (books.isEmpty()) {
@@ -26,6 +30,7 @@ public class BookService {
         return books;
     }
     
+    @Cacheable(value = "book", key = "#bookId") 
     public Book getBookById(final Long bookId) {
         // validate bookId
         if (bookId != null) {
@@ -39,7 +44,7 @@ public class BookService {
         throw new BookException("Invalid book Id " + bookId, HttpStatus.BAD_REQUEST);
     }
 
-
+    @CacheEvict(value = "books", allEntries = true)
     public String saveBook(final Book book) {
         if (book != null) {
             bookRepository.save(book);
@@ -49,6 +54,7 @@ public class BookService {
         throw new BookException("Invalid book request", HttpStatus.BAD_REQUEST);
     }
 
+    @CacheEvict(value = "book", key = "#bookId")
     public String updateBook(final Book book, final Long bookId) {
         if (bookId != null && book != null) {
             Optional<Book> bookOptional = bookRepository.findById(bookId);
@@ -69,6 +75,7 @@ public class BookService {
         throw new BookException("Invalid book request", HttpStatus.BAD_REQUEST);
     }
 
+    @CacheEvict(value = {"book", "books"}, key = "#bookId")
     public String deleteBook(final Long bookId) {
         if (bookId != null) {
             Optional<Book> bookOptional = bookRepository.findById(bookId);
