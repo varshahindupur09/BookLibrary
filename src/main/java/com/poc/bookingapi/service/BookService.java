@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -17,6 +18,14 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    public List<Book> getAllBooks() {
+        List<Book> books = bookRepository.findAll();
+        if (books.isEmpty()) {
+            throw new RuntimeException("No books found in the database!");
+        }
+        return books;
+    }
+    
     public Book getBookById(final Long bookId) {
         // validate bookId
         if (bookId != null) {
